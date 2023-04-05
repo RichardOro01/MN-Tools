@@ -16,6 +16,7 @@ const XYValuesPicker: React.FC<{ setValues: (a: any)=>void }> = ({setValues}) =>
                 ]
             })
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handlePicker = ( xy: PickerProps, pos: number ) => {

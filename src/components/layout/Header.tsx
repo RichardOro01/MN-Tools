@@ -10,8 +10,9 @@ const Header:React.FC = () => {
             MN Tools
         </div> 
         <div className='flex flex-row gap-2'>
-            <Button onClick={()=>navigate('interpolacion')}>Interpolacion</Button>
+            <Button onClick={()=>navigate('interpolation')}>Interpolación</Button>
             <Button onClick={()=>navigate('jacobi')}>Jacobi</Button>
+            <Button onClick={()=>navigate('roots_separation')}>Separación de raíces</Button>
         </div>
     </div>
   )
