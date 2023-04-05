@@ -14,7 +14,14 @@ const Interpolacion: React.FC = () => {
         console.log('valores cercanos: ', nearValues);
         const lValues = getLValues(nearValues);
         console.log('lValues:', lValues);
-        const approximate = calculeApproximate(lValues, nearValues);
+        const approximate = calculeLagrangeApproximate(lValues, nearValues);
+        console.log(`p(${value}: ${approximate})`);
+    }
+    const newton = () => {
+        console.log(values);
+        const nearValues = getNearValues();
+        console.log('valores cercanos: ', nearValues);
+        const approximate = calculeNewtonApproximate(nearValues);
         console.log(`p(${value}: ${approximate})`);
     }
 
@@ -64,12 +71,19 @@ const Interpolacion: React.FC = () => {
         }
         return lValues;
     }
-    const calculeApproximate = (lValues: number[], nearValues: PickerProps[]) => {
+    const calculeLagrangeApproximate = (lValues: number[], nearValues: PickerProps[]) => {
         let sum = 0;
         for (let i=0; i<lValues.length; i++) {
             sum += nearValues[i].y * lValues[i];
         }
         return sum;
+    }
+    const calculeNewtonApproximate = (nearValues: PickerProps[]) => {
+        let app = recursiveNewton(nearValues, 0, grade);
+        return app;
+    }
+    const recursiveNewton = (nearValues: PickerProps[], i: number, j: number) =>{
+
     }
   return (
     <div className='flex flex-col w-full justify-center items-center pt-5 gap-4'>
@@ -84,7 +98,7 @@ const Interpolacion: React.FC = () => {
         </div>
         <div className='flex flex-row gap-2'>
             <Button onClick={lagrange}>Lagrange</Button>
-            <Button>Newton</Button>
+            <Button onClick={newton}>Newton</Button>
         </div>
     </div>
   )
