@@ -15,14 +15,14 @@ const Interpolacion: React.FC = () => {
         const lValues = getLValues(nearValues);
         console.log('lValues:', lValues);
         const approximate = calculeLagrangeApproximate(lValues, nearValues);
-        console.log(`p(${value}: ${approximate})`);
+        console.log(`p(${value}): ${approximate}`);
     }
     const newton = () => {
         console.log(values);
         const nearValues = getNearValues();
         console.log('valores cercanos: ', nearValues);
         const approximate = calculeNewtonApproximate(nearValues);
-        console.log(`p(${value}: ${approximate})`);
+        console.log(`p(${value}): ${approximate}`);
     }
 
     const getNearValues = (): PickerProps[] => {
@@ -79,11 +79,21 @@ const Interpolacion: React.FC = () => {
         return sum;
     }
     const calculeNewtonApproximate = (nearValues: PickerProps[]) => {
-        let app = recursiveNewton(nearValues, 0, grade);
-        return app;
+        let sum = 0;
+        for (let i=0; i<nearValues.length; i++) {
+            let mult = 1;
+            for (let j=0; j<i; j++){
+                mult *= (value-nearValues[j].x);
+            }
+            sum += recursiveNewton(nearValues, 0, i) * mult;
+        }
+        return sum;
     }
-    const recursiveNewton = (nearValues: PickerProps[], i: number, j: number) =>{
-
+    const recursiveNewton = (nearValues: PickerProps[], i: number, j: number): number => {
+        if (i===j) {
+            return nearValues[i].y;
+        }
+        return (recursiveNewton(nearValues, i+1, j) - recursiveNewton(nearValues, i, j-1))/(nearValues[j].x-nearValues[i].x);
     }
   return (
     <div className='flex flex-col w-full justify-center items-center pt-5 gap-4'>
