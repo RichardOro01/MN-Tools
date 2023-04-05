@@ -6,15 +6,17 @@ import { PickerProps } from '../commons/Picker'
 
 const Interpolacion: React.FC = () => {
     const [values, setValues] = useState<PickerProps[]>([]);
+    const [value, setValue] = useState(0);
+    const [grade, setGrade] = useState(0);
     const lagrange = () => {
         console.log(values);
         const nearValues = getNearValues().sort((a,b)=>a.x-b.x);
         console.log('valores cercanos: ', nearValues);
         const lValues = getLValues(nearValues);
         console.log('lValues:', lValues);
+        const approximate = calculeApproximate(lValues, nearValues);
+        console.log(`p(${value}: ${approximate})`);
     }
-    let value = 0;
-    let grade = 0;
 
     const getNearValues = (): PickerProps[] => {
         const resultValues = [];
@@ -62,15 +64,22 @@ const Interpolacion: React.FC = () => {
         }
         return lValues;
     }
+    const calculeApproximate = (lValues: number[], nearValues: PickerProps[]) => {
+        let sum = 0;
+        for (let i=0; i<lValues.length; i++) {
+            sum += nearValues[i].y * lValues[i];
+        }
+        return sum;
+    }
   return (
     <div className='flex flex-col w-full justify-center items-center pt-5 gap-4'>
         <XYValuesPicker {...{setValues}}/>
         <div className='flex flex-row gap-2'>
             <div>
-                Value: <Input onChange={(e: any)=>{value=Number(e.target.value)}}/>
+                Value: <Input onChange={(e: any)=>{setValue(Number(e.target.value))}}/>
             </div>
             <div>
-                Grade: <Input onChange={(e: any)=>{grade=Number(e.target.value)}}/>
+                Grade: <Input onChange={(e: any)=>{setGrade(Number(e.target.value))}}/>
             </div>
         </div>
         <div className='flex flex-row gap-2'>
