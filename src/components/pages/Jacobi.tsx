@@ -22,11 +22,37 @@ const Jacobi: React.FC = () => {
                 }
                 multVector[i] = sum + despIndepTerms[i];
             }
-            const landa = Math.max(...substractMatrix(multVector, multiVectorCopy));
-            const error = (alpha/(1-alpha))*landa;
-            
+            const landa = Math.max(...substractMatrix(multiVectorCopy, multVector));
+            const error = Math.abs((alpha/(1-alpha))*landa);
+            console.log(`it ${it+1}: ${multVector}`);
+            console.log(`error: ${error}`);
         }
         
+    }
+
+    const seider = () => {
+        const {matrix, indepTerms} = extractMatrix();
+        const {despMatrix, despIndepTerms} = solveMatrix(matrix, indepTerms);
+        const alpha = calculateAlpha(despMatrix);
+        const beta = calculateBeta(despMatrix);
+        console.log('alpha: ', alpha);
+        console.log('beta: ', beta);
+
+        //iterate
+        const n = 5;
+        let multVector = [0, 0, 0];
+        for (let it=0; it<n; it++) {
+            
+            for (let i=0; i<despMatrix.length; i++) {
+                let sum = 0;
+                for (let j=0; j<despMatrix[i].length; j++) {
+                    sum += despMatrix[i][j] * multVector[j];
+                }
+                multVector[i] = sum + despIndepTerms[i];
+            }
+            console.log(`it ${it+1}: ${multVector}`);
+            // console.log(`error: ${error}`);
+        }
     }
 
     const substractMatrix = (matrix1: number[], matrix2: number[]) => {
@@ -46,6 +72,21 @@ const Jacobi: React.FC = () => {
             })
             candidates.push(sum);
         })
+        return Math.max(...candidates);
+    }
+
+    const calculateBeta = (matrix: number[][]) => {
+        const candidates: number[] = [];
+        for (let i=0; i<matrix.length; i++) {
+            let [q, p] = [0, 0];
+            for (let j=i; j<matrix[i].length; j++) {
+                q += Math.abs(matrix[i][j]);
+            }
+            for (let j=0; j<i; j++) {
+                p += Math.abs(matrix[i][j]);
+            }
+            candidates.push(q/(1-p));
+        }
         return Math.max(...candidates);
     }
 
@@ -119,6 +160,7 @@ const Jacobi: React.FC = () => {
                 <Input placeholder='2x + 3y = 3' onChange={(e)=>handleChange(e,2)}/>
             </Form.Item>
             <Button onClick={jacobi}>Jacobi</Button>
+            <Button onClick={seider}>Seider</Button>
         </Form>
     </div>
   )
