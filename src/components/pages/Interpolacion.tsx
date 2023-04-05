@@ -8,12 +8,15 @@ const Interpolacion: React.FC = () => {
     const [values, setValues] = useState<PickerProps[]>([]);
     const lagrange = () => {
         console.log(values);
-        console.log(getNearValues());
+        const nearValues = getNearValues().sort((a,b)=>a.x-b.x);
+        console.log('valores cercanos: ', nearValues);
+        const lValues = getLValues(nearValues);
+        console.log('lValues:', lValues);
     }
     let value = 0;
     let grade = 0;
 
-    const getNearValues = () => {
+    const getNearValues = (): PickerProps[] => {
         const resultValues = [];
         const valuesCopy = [...values];
         for (let i=0; i<=grade; i++) {
@@ -38,6 +41,26 @@ const Interpolacion: React.FC = () => {
             }
         }
         return resultValues;
+    }
+
+    const getLValues = (nearValues: PickerProps[]) => {
+        const lValues = [];
+        for (let i=0; i<nearValues.length; i++) {
+            let mult1 = 1;
+            for (let j=0; j<nearValues.length; j++) {
+                if (j!==i) {
+                    mult1 *= (value-nearValues[j].x);
+                }
+            }
+            let mult2 = 1;
+            for (let j=0; j<nearValues.length; j++) {
+                if (j!==i) {
+                    mult2 *= (nearValues[i].x-nearValues[j].x);
+                }
+            }
+            lValues.push(mult1/mult2);
+        }
+        return lValues;
     }
   return (
     <div className='flex flex-col w-full justify-center items-center pt-5 gap-4'>
