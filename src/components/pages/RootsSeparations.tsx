@@ -1,5 +1,6 @@
 import { Button, Form, Input } from 'antd'
 import React, { useState } from 'react'
+import { parser, derivative, parse } from 'mathjs';
 
 const RootsSeparations: React.FC = () => {
     const [equation, setEquation] = useState('');
@@ -21,7 +22,7 @@ const RootsSeparations: React.FC = () => {
                 } else {
                     a = x;
                 }  
-                console.log(`it ${i+1}:`, [a, b])
+                console.log(`it ${i+1}:`, [a, b]);
             }
         } else {
             console.log('No se cumple Bolsano!')
@@ -44,40 +45,63 @@ const RootsSeparations: React.FC = () => {
                 } else {
                     a = x;
                 }  
-                console.log(`it ${i+1}:`, [a, b])
+                console.log(`it ${i+1}:`, [a, b]);
             }
         } else {
             console.log('No se cumple Bolsano!')
         }
     }
     const newton = () =>{
-        console.log(equation, values);
-        let [a, b] = [...values];
-        if (fun(a) * fun(b) < 0) {
+        console.log(equation, values[0]);
+        let [a] = [...values];
+        if (df(a) * df_2(a) > 0) {
             for (let i=0; i<iterations; i++) {
-                let fa = fun(a)
-                let fb = fun(b)
-                let x = a - ((b - a) / (fb - fa)) * fa;
-                let fx = fun(x);
-                if (fx===0) {
-                    console.log(x);
-                } else if (fx * fa < 0) {
-                    b = x;
-                } else {
-                    a = x;
-                }  
-                console.log(`it ${i+1}:`, [a, b])
+                let x = a - (fun(a) / df(a));
+                a = x;
+                console.log(`it ${i+1}:`, a);
             }
         } else {
-            console.log('No se cumple Bolsano!')
+            console.log('No se cumplen la derivadas!')
         }
     }
     const secant = () =>{
-        console.log(equation);
+        console.log(equation, values[0]);
+        let [a, b] = [...values];
+        for (let i=0; i<iterations; i++) {
+            let fa = fun(a)
+            let fb = fun(b)
+            let x = a - ((b - a) / (fb - fa)) * fa;
+            let fx = fun(x);
+            if (fx===0) {
+                console.log(x);
+            } else if (fx * fa < 0) {
+                b = x;
+            } else {
+                a = x;
+            }  
+            console.log(`it ${i+1}:`, [a, b]);
+        }
     }
 
     const fun = (x: number) => {
-        return eval(equation.replace(' ',''));
+        // return eval(equation.replace(' ',''));
+        const parse = parser();
+        parse.evaluate(`f(x) = ${equation}`);
+        
+        return Number(parse.evaluate(`f(${x})`));
+    }
+
+    const df = (x: number) => {
+        const parsed = parse(equation);
+        const df = derivative(parsed, 'x');
+        return df.evaluate({x: x});
+    }
+
+    const df_2 = (x: number) => {
+        const parsed = parse(equation);
+        const df = derivative(parsed, 'x');
+        const df2 = derivative(df, 'x');
+        return df2.evaluate({x: x});
     }
 
   return (
