@@ -23,7 +23,7 @@ const Jacobi: React.FC = () => {
                 multVector[i] = sum + despIndepTerms[i];
             }
             const landa = Math.max(...substractMatrix(multiVectorCopy, multVector));
-            const error = Math.abs(((alpha/(1-alpha))*landa) | 0);
+            const error = Math.abs(((alpha/(1-alpha))*landa) || 0);
             console.log(`it ${it+1}: ${multVector}`);
             console.log(`error: ${error}`);
         }
@@ -85,7 +85,7 @@ const Jacobi: React.FC = () => {
             for (let j=0; j<i; j++) {
                 p += Math.abs(matrix[i][j]);
             }
-            candidates.push((q/(1-p)) | 0);
+            candidates.push((q/(1-p)) || 0);
         }
         return Math.max(...candidates);
     }
@@ -120,12 +120,13 @@ const Jacobi: React.FC = () => {
         for (let i=0; i<matrix.length; i++) {
             despMatrix[i] = [];
             const div = matrix[i][i];
-            despIndepTerms[i] = (indepTerms[i]/div) | 0;
+            despIndepTerms[i] = (indepTerms[i]/div) || 0;
+            console.log("asda", indepTerms[i]/div)
             for (let j = 0; j<matrix[i].length; j++) {
                 if (j===i) {
                     despMatrix[i][j]=0;
                 } else {
-                    despMatrix[i][j]=((matrix[i][j]/div) | 0)*-1;
+                    despMatrix[i][j]=((matrix[i][j]/div) || 0)*-1;
                 }
             }
         }

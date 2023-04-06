@@ -65,20 +65,14 @@ const RootsSeparations: React.FC = () => {
         }
     }
     const secant = () =>{
-        console.log(equation, values[0]);
+        console.log(equation, values);
         let [a, b] = [...values];
         for (let i=0; i<iterations; i++) {
             let fa = fun(a)
             let fb = fun(b)
-            let x = a - ((b - a) / (fb - fa)) * fa;
-            let fx = fun(x);
-            if (fx===0) {
-                console.log(x);
-            } else if (fx * fa < 0) {
-                b = x;
-            } else {
-                a = x;
-            }  
+            let x = b - ((b - a) / (fb - fa)) * fb;
+            a = b;
+            b = x;
             console.log(`it ${i+1}:`, [a, b]);
         }
     }
