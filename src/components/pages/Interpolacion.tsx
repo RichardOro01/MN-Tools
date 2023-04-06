@@ -38,25 +38,16 @@ const Interpolacion: React.FC = () => {
         const resultValues = [];
         const valuesCopy = [...values];
         for (let i=0; i<=grade; i++) {
-            console.log(i)
-            if (i%2===0) {
-                
-                for (let j=0; j<valuesCopy.length; j++) {
-                    if (valuesCopy[j].x>=value || j===valuesCopy.length-1) {
-                        resultValues.push(valuesCopy[j]);
-                        valuesCopy.splice(j, 1);
-                        break;
-                    }
-                }
-            } else {
-                for (let j=valuesCopy.length-1; j>=0; j--) {
-                    if (valuesCopy[j].x<=value || j===0) {
-                        resultValues.push(valuesCopy[j]);
-                        valuesCopy.splice(j, 1);
-                        break;
-                    }
-                }
+            let difs: number[] = [];
+            let links: any = {}
+            for (let j=0; j<valuesCopy.length; j++) {
+                const dif = Math.abs(valuesCopy[j].x-value);
+                difs.push(dif);
+                links[`${dif}`] = j;
             }
+            const min = Math.min(...difs);
+            resultValues.push(valuesCopy[links[min]]);
+            valuesCopy.splice(links[min], 1);
         }
         return resultValues;
     }
