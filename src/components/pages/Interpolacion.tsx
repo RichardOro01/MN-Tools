@@ -26,8 +26,12 @@ const Interpolacion: React.FC = () => {
         console.log(values);
         const nearValues = getNearValues();
         console.log('valores cercanos: ', nearValues);
-        const approximate = calculeNewtonApproximate(nearValues);
+        const {approximate, apps} = calculeNewtonApproximate(nearValues);
         console.log(`p(${value}): ${approximate}`);
+        const error = calculateErrorNewton(nearValues, apps);
+        console.log('apps: ', apps);
+        console.log('Error: ', error);
+        return approximate;
     }
 
     const getNearValues = (): PickerProps[] => {
@@ -85,14 +89,17 @@ const Interpolacion: React.FC = () => {
     }
     const calculeNewtonApproximate = (nearValues: PickerProps[]) => {
         let sum = 0;
+        let apps = [];
         for (let i=0; i<nearValues.length; i++) {
             let mult = 1;
             for (let j=0; j<i; j++){
                 mult *= (value-nearValues[j].x);
             }
-            sum += recursiveNewton(nearValues, 0, i) * mult;
+            let app = recursiveNewton(nearValues, 0, i) * mult;
+            sum += app;
+            apps.push(sum);
         }
-        return sum;
+        return {approximate: sum, ...{apps}};
     }
     const recursiveNewton = (nearValues: PickerProps[], i: number, j: number): number => {
         if (i===j) {
@@ -119,6 +126,18 @@ const Interpolacion: React.FC = () => {
         console.log('Factorial: ', fact);
         return ((M/fact)*Math.abs(mult));
     }
+
+    const calculateErrorNewton = (nearValues: PickerProps[], apps: number[]) => {
+        // return recursiveErrorNewton(nearValues, apps, grade + 1);
+        return Math.abs(apps[grade]-apps[grade-1])
+    }
+    const recursiveErrorNewton = (nearValues: PickerProps[], apps: number[], n: number): number => {
+        if (n===0) {
+            return nearValues[n].y;
+        }
+        return recursiveErrorNewton(nearValues, apps, n-1) + apps[n-1];
+    }
+
   return (
     <div className='flex flex-col w-full justify-center items-center pt-5 gap-4'>
         <Form className='w-1/2'>

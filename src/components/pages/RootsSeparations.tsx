@@ -23,6 +23,8 @@ const RootsSeparations: React.FC = () => {
                     a = x;
                 }  
                 console.log(`it ${i+1}:`, [a, b]);
+                const err = (b-a)/2;
+                console.log(`error :`, err);
             }
         } else {
             console.log('No se cumple Bolsano!')
@@ -32,6 +34,7 @@ const RootsSeparations: React.FC = () => {
     const regulaFalsi = () =>{
         console.log(equation, values);
         let [a, b] = [...values];
+        let old = 0;
         if (fun(equation, a) * fun(equation, b) < 0) {
             for (let i=0; i<iterations; i++) {
                 let fa = fun(equation, a)
@@ -46,6 +49,9 @@ const RootsSeparations: React.FC = () => {
                     a = x;
                 }  
                 console.log(`it ${i+1}:`, [a, b]);
+                const error = Math.abs(x - old);
+                old = x;
+                console.log('error: ', error);
             }
         } else {
             console.log('No se cumple Bolsano!')
@@ -54,11 +60,15 @@ const RootsSeparations: React.FC = () => {
     const newton = () =>{
         console.log(equation, values[0]);
         let [a] = [...values];
+        let old = 0;
         if (df(equation, a) * df(equation, a, 2) > 0) {
             for (let i=0; i<iterations; i++) {
                 let x = a - (fun(equation, a) / df(equation, a));
                 a = x;
                 console.log(`it ${i+1}:`, a);
+                const error = Math.abs(x - old);
+                old = x;
+                console.log('error: ', error);
             }
         } else {
             console.log('No se cumplen la derivadas!')
@@ -67,6 +77,7 @@ const RootsSeparations: React.FC = () => {
     const secant = () =>{
         console.log(equation, values);
         let [a, b] = [...values];
+        let old = 0;
         for (let i=0; i<iterations; i++) {
             let fa = fun(equation, a)
             let fb = fun(equation, b)
@@ -74,6 +85,9 @@ const RootsSeparations: React.FC = () => {
             a = b;
             b = x;
             console.log(`it ${i+1}:`, [a, b]);
+            const error = Math.abs(x - old);
+            old = x;
+            console.log('error: ', error);
         }
     }
 
