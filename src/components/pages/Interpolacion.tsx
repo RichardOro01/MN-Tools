@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
 import XYValuesPicker from '../commons/XYValuesPicker'
 import Input from 'antd/es/input/Input'
-import { Button } from 'antd'
+import { Button, Form } from 'antd'
 import { PickerProps } from '../commons/Picker'
+import { df } from '../utils'
+import { factorial } from 'mathjs'
 
 const Interpolacion: React.FC = () => {
     const [values, setValues] = useState<PickerProps[]>([]);
     const [value, setValue] = useState(0);
     const [grade, setGrade] = useState(0);
+    const [equation, setEquation] = useState('');
     const lagrange = () => {
         console.log(values);
         const nearValues = getNearValues().sort((a,b)=>a.x-b.x);
@@ -16,6 +19,8 @@ const Interpolacion: React.FC = () => {
         console.log('lValues:', lValues);
         const approximate = calculeLagrangeApproximate(lValues, nearValues);
         console.log(`p(${value}): ${approximate}`);
+        const error = calculateErrorLagrange(nearValues);
+        console.log('Error: ', error);
     }
     const newton = () => {
         console.log(values);
@@ -95,8 +100,40 @@ const Interpolacion: React.FC = () => {
         }
         return (recursiveNewton(nearValues, i+1, j) - recursiveNewton(nearValues, i, j-1))/(nearValues[j].x-nearValues[i].x);
     }
+
+    //errors
+    const calculateErrorLagrange = (nearValues: PickerProps[]) => {
+        const Ms = [];
+        for (let i=0; i<grade+1; i++) {
+            Ms.push(df(equation, nearValues[i].x, i + 1))
+            console.log(equation, value, i + 1)
+        }
+        const M = Math.max(...Ms);
+        console.log('Ms: ', Ms);
+        console.log('M: ', M);
+        let mult = 1;
+        for (let i=0; i<grade + 1; i++) {
+            mult *= (value - nearValues[i].x);
+        }
+        const fact = factorial(grade+1);
+        console.log('Factorial: ', fact);
+        return ((M/fact)*Math.abs(mult));
+    }
   return (
     <div className='flex flex-col w-full justify-center items-center pt-5 gap-4'>
+        <Form className='w-1/2'>
+        
+            <Form.Item
+                label='Ecuación'
+            >
+                <div className='flex flex-row gap-1 justify-center items-center'>
+                    <div className='whitespace-nowrap'>
+                        y = 
+                    </div>
+                    <Input placeholder='2x + 2' onChange={(e)=>setEquation(e.target.value)}/>
+                </div>
+            </Form.Item>
+        </Form>
         <XYValuesPicker {...{setValues}}/>
         <div className='flex flex-row gap-2'>
             <div>

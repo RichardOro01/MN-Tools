@@ -1,6 +1,6 @@
 import { Button, Form, Input } from 'antd'
 import React, { useState } from 'react'
-import { parser, derivative, parse } from 'mathjs';
+import { fun, df } from '../utils';
 
 const RootsSeparations: React.FC = () => {
     const [equation, setEquation] = useState('');
@@ -11,13 +11,13 @@ const RootsSeparations: React.FC = () => {
     const bisection = () =>{
         console.log(equation, values);
         let [a, b] = [...values];
-        if (fun(a) * fun(b) < 0) {
+        if (fun(equation, a) * fun(equation, b) < 0) {
             for (let i=0; i<iterations; i++) {
                 let x = (a + b) / 2;
-                let fx = fun(x);
+                let fx = fun(equation, x);
                 if (fx===0) {
                     console.log(x);
-                } else if (fx * fun(a) < 0) {
+                } else if (fx * fun(equation, a) < 0) {
                     b = x;
                 } else {
                     a = x;
@@ -32,12 +32,12 @@ const RootsSeparations: React.FC = () => {
     const regulaFalsi = () =>{
         console.log(equation, values);
         let [a, b] = [...values];
-        if (fun(a) * fun(b) < 0) {
+        if (fun(equation, a) * fun(equation, b) < 0) {
             for (let i=0; i<iterations; i++) {
-                let fa = fun(a)
-                let fb = fun(b)
+                let fa = fun(equation, a)
+                let fb = fun(equation, b)
                 let x = a - ((b - a) / (fb - fa)) * fa;
-                let fx = fun(x);
+                let fx = fun(equation, x);
                 if (fx===0) {
                     console.log(x);
                 } else if (fx * fa < 0) {
@@ -54,9 +54,9 @@ const RootsSeparations: React.FC = () => {
     const newton = () =>{
         console.log(equation, values[0]);
         let [a] = [...values];
-        if (df(a) * df_2(a) > 0) {
+        if (df(equation, a) * df(equation, a, 2) > 0) {
             for (let i=0; i<iterations; i++) {
-                let x = a - (fun(a) / df(a));
+                let x = a - (fun(equation, a) / df(equation, a));
                 a = x;
                 console.log(`it ${i+1}:`, a);
             }
@@ -68,8 +68,8 @@ const RootsSeparations: React.FC = () => {
         console.log(equation, values);
         let [a, b] = [...values];
         for (let i=0; i<iterations; i++) {
-            let fa = fun(a)
-            let fb = fun(b)
+            let fa = fun(equation, a)
+            let fb = fun(equation, b)
             let x = b - ((b - a) / (fb - fa)) * fb;
             a = b;
             b = x;
@@ -77,26 +77,7 @@ const RootsSeparations: React.FC = () => {
         }
     }
 
-    const fun = (x: number) => {
-        // return eval(equation.replace(' ',''));
-        const parse = parser();
-        parse.evaluate(`f(x) = ${equation}`);
-        
-        return Number(parse.evaluate(`f(${x})`));
-    }
-
-    const df = (x: number) => {
-        const parsed = parse(equation);
-        const df = derivative(parsed, 'x');
-        return df.evaluate({x: x});
-    }
-
-    const df_2 = (x: number) => {
-        const parsed = parse(equation);
-        const df = derivative(parsed, 'x');
-        const df2 = derivative(df, 'x');
-        return df2.evaluate({x: x});
-    }
+    
 
   return (
     <div className='flex flex-col justify-center items-center w-full p-4'>
