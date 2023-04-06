@@ -98,13 +98,20 @@ const Jacobi: React.FC = () => {
     const calculateBeta = (matrix: number[][]) => {
         const candidates: number[] = [];
         for (let i=0; i<matrix.length; i++) {
+            let qs = 'q = ';
             let [q, p] = [0, 0];
             for (let j=i; j<matrix[i].length; j++) {
                 q += Math.abs(matrix[i][j]);
+                qs += `${Math.abs(matrix[i][j])} +` 
             }
+            let ps = 'p = '
             for (let j=0; j<i; j++) {
                 p += Math.abs(matrix[i][j]);
+                ps += `${Math.abs(matrix[i][j])} +` 
             }
+            console.log(qs);
+            console.log(ps);
+            console.log(`B${i}(${q}/(1-${p}) = ${(q/(1-p)) || 0}`)
             candidates.push((q/(1-p)) || 0);
         }
         return Math.max(...candidates);

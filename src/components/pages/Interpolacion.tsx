@@ -108,19 +108,25 @@ const Interpolacion: React.FC = () => {
         let apps = [];
         for (let i=0; i<nearValues.length; i++) {
             let mult = 1;
+            let str = "";
             for (let j=0; j<i; j++){
                 mult *= (value-nearValues[j].x);
+                str += `(${value} - ${nearValues[j].x})`
             }
             let app = recursiveNewton(nearValues, 0, i) * mult;
             sum += app;
+            str = `${app} * ${str} `
+            console.log(str);
             apps.push(sum);
         }
         return {approximate: sum, ...{apps}};
     }
     const recursiveNewton = (nearValues: PickerProps[], i: number, j: number): number => {
         if (i===j) {
+            console.log(`f(${i}) = ${nearValues[i].y}`)
             return nearValues[i].y;
         }
+        console.log(`f(${i}, ${j}) = (${recursiveNewton(nearValues, i+1, j)} - ${recursiveNewton(nearValues, i, j-1)}) / (${nearValues[j].x} - ${nearValues[i].x})`);
         return (recursiveNewton(nearValues, i+1, j) - recursiveNewton(nearValues, i, j-1))/(nearValues[j].x-nearValues[i].x);
     }
 
