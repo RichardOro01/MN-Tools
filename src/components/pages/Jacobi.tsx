@@ -1,19 +1,30 @@
 import { Form, Input } from 'antd'
 import { Button } from 'antd/es/radio'
 import React, { useState } from 'react'
+import JacobiData, { JacobiDataProps } from '../showData/JacobiData';
+import SeiderData from '../showData/SeiderData';
 
 const Jacobi: React.FC = () => {
-    const [equations, setEquations] = useState<string[]>([])
+    const [equations, setEquations] = useState<string[]>([]);
+    const [iterations, setIterations] = useState<number>(4);
+    const [lError, setLError] = useState<number>(0);
+    const [dataJacobi, setDataJacobi] = useState<JacobiDataProps>();
+    const [dataSeider, setDataSeider] = useState<JacobiDataProps>();
+    const [showSeider, setShowSeider] = useState(false);
+    const [showJacobi, setShowjacobi] = useState(false);
+
     const jacobi = () => {
+        setShowSeider(false);
+        setShowjacobi(true);
         const {matrix, indepTerms} = extractMatrix();
         const {despMatrix, despIndepTerms} = solveMatrix(matrix, indepTerms);
+        setDataJacobi((s)=>{return {...s, matrix: matrix, despMatrix: despMatrix, termInde: indepTerms, despTerm: despIndepTerms}});
         const alpha = calculateAlpha(despMatrix);
         console.log('alpha: ', alpha);
 
         //iterate
-        const n = 5;
         let multVector = [0, 0, 0];
-        for (let it=0; it<n; it++) {
+        for (let it=0; it<iterations; it++) {
             let multiVectorCopy = [...multVector];
             for (let i=0; i<despMatrix.length; i++) {
                 let sum = 0;
@@ -26,11 +37,16 @@ const Jacobi: React.FC = () => {
             const error = Math.abs(((alpha/(1-alpha))*landa) || 0);
             console.log(`it ${it+1}: ${multVector}`);
             console.log(`error: ${error}`);
+            if (error<=lError) {
+                break;
+            }
         }
         
     }
 
     const seider = () => {
+        setShowSeider(true);
+        setShowjacobi(false);
         const {matrix, indepTerms} = extractMatrix();
         const {despMatrix, despIndepTerms} = solveMatrix(matrix, indepTerms);
         const alpha = calculateAlpha(despMatrix);
@@ -39,9 +55,8 @@ const Jacobi: React.FC = () => {
         console.log('beta: ', beta);
 
         //iterate
-        const n = 5;
         let multVector = [0, 0, 0];
-        for (let it=0; it<n; it++) {
+        for (let it=0; it<iterations; it++) {
             let multiVectorCopy = [...multVector];
             for (let i=0; i<despMatrix.length; i++) {
                 let sum = 0;
@@ -52,8 +67,11 @@ const Jacobi: React.FC = () => {
             }
             const landa = Math.max(...substractMatrix(multiVectorCopy, multVector));
             const error = Math.abs(((alpha/(1-alpha))*landa) || 0);
-            console.log(`it ${it+1}: ${multVector}`);
+            console.log(`it ${it+1}:`, multVector);
             console.log(`error: ${error}`);
+            if (error<=lError) {
+                break;
+            }
         }
     }
 
@@ -123,7 +141,6 @@ const Jacobi: React.FC = () => {
             despMatrix[i] = [];
             const div = matrix[i][i];
             despIndepTerms[i] = (indepTerms[i]/div) || 0;
-            console.log("asda", indepTerms[i]/div)
             for (let j = 0; j<matrix[i].length; j++) {
                 if (j===i) {
                     despMatrix[i][j]=0;
@@ -162,9 +179,19 @@ const Jacobi: React.FC = () => {
             >
                 <Input placeholder='2x + 3y = 3' onChange={(e)=>handleChange(e,2)}/>
             </Form.Item>
+            <Form.Item
+                label='Iteraciones | Error'
+            >
+                <div className='flex flex-row gap-2'>
+                    <Input placeholder='4' onChange={(e)=>setIterations(Number(e.target.value))}/>
+                    <Input placeholder='0.003' onChange={(e)=>setLError(Number(e.target.value))}/>
+                </div>
+            </Form.Item>
             <Button onClick={jacobi}>Jacobi</Button>
             <Button onClick={seider}>Seider</Button>
         </Form>
+        {showJacobi && <JacobiData data={dataJacobi as JacobiDataProps}/>}
+        {showSeider && <SeiderData data={dataJacobi as JacobiDataProps}/>}
     </div>
   )
 }

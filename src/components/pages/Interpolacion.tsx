@@ -5,16 +5,26 @@ import { Button, Form } from 'antd'
 import { PickerProps } from '../commons/Picker'
 import { df } from '../utils'
 import { factorial } from 'mathjs'
+import InterpolationLagrange, { DataLagrange } from '../showData/InterpolationLagrange'
+import InterpolationNewton from '../showData/InterpolationNewton'
 
 const Interpolacion: React.FC = () => {
     const [values, setValues] = useState<PickerProps[]>([]);
     const [value, setValue] = useState(0);
     const [grade, setGrade] = useState(0);
     const [equation, setEquation] = useState('');
+    const [showLagrange, setShowLagrange] = useState(false);
+    const [showNewton, setShowNewton] = useState(false);
+    const [lagrangeData, setLagrangeData] = useState<DataLagrange>();
+    const [newtonData, setNewtonData] = useState<any>({});
     const lagrange = () => {
+        setShowLagrange(true);
+        setShowNewton(false);
         console.log(values);
         const nearValues = getNearValues().sort((a,b)=>a.x-b.x);
+        setLagrangeData((s: any)=>{return {...s, nearValues: nearValues}});
         console.log('valores cercanos: ', nearValues);
+        console.log(lagrangeData);
         const lValues = getLValues(nearValues);
         console.log('lValues:', lValues);
         const approximate = calculeLagrangeApproximate(lValues, nearValues);
@@ -23,6 +33,8 @@ const Interpolacion: React.FC = () => {
         console.log('Error: ', error);
     }
     const newton = () => {
+        setShowNewton(true);
+        setShowLagrange(false);
         console.log(values);
         const nearValues = getNearValues();
         console.log('valores cercanos: ', nearValues);
@@ -54,28 +66,41 @@ const Interpolacion: React.FC = () => {
 
     const getLValues = (nearValues: PickerProps[]) => {
         const lValues = [];
+        let strs: string[] = [];
         for (let i=0; i<nearValues.length; i++) {
+            let str =  `L${i}(${value}) = ( `;
             let mult1 = 1;
             for (let j=0; j<nearValues.length; j++) {
                 if (j!==i) {
                     mult1 *= (value-nearValues[j].x);
+                    str += `(${value} - ${nearValues[j].x}) `
                 }
             }
+            str += ') / ';
             let mult2 = 1;
             for (let j=0; j<nearValues.length; j++) {
                 if (j!==i) {
                     mult2 *= (nearValues[i].x-nearValues[j].x);
+                    str += `(${nearValues[i].x} - ${nearValues[j].x}) `
                 }
             }
+            str += ` = ${mult1/mult2}`
+            strs.push(str);
             lValues.push(mult1/mult2);
         }
+        console.log(strs);
+        setLagrangeData((s: any)=>{return{...s,lValues: strs}});
         return lValues;
     }
     const calculeLagrangeApproximate = (lValues: number[], nearValues: PickerProps[]) => {
         let sum = 0;
+        let str = `p${grade}(${value}) = `; 
         for (let i=0; i<lValues.length; i++) {
             sum += nearValues[i].y * lValues[i];
+            str += `${i===0?'':' +'} (${nearValues[i].y} * ${lValues[i]})`
         }
+        str += ` = ${sum}`
+        setLagrangeData((s: any)=>{return{...s,px: str}});
         return sum;
     }
     const calculeNewtonApproximate = (nearValues: PickerProps[]) => {
@@ -102,20 +127,31 @@ const Interpolacion: React.FC = () => {
     //errors
     const calculateErrorLagrange = (nearValues: PickerProps[]) => {
         const Ms = [];
+        let strs: string[] = [];
+        
         for (let i=0; i<grade+1; i++) {
-            Ms.push(df(equation, nearValues[i].x, i + 1))
-            console.log(equation, value, i + 1)
+            let str = '';
+            let vdf = df(equation, nearValues[i].x, i + 1);
+            Ms.push(vdf);
+            str += `df${i + 1}(${equation}) (x = ${nearValues[i].x}) = ${vdf}`
+            strs.push(str);
         }
         const M = Math.max(...Ms);
         console.log('Ms: ', Ms);
         console.log('M: ', M);
+        strs.push(`M = max: ${M}`);
+        let str = '';
         let mult = 1;
         for (let i=0; i<grade + 1; i++) {
             mult *= (value - nearValues[i].x);
+            str += `(${value} - ${nearValues[i].x})`
         }
         const fact = factorial(grade+1);
+        const err = (M/fact)*Math.abs(mult)
+        strs.push(`Error = (${M} / ${fact}) ${str} = ${err}`);
         console.log('Factorial: ', fact);
-        return ((M/fact)*Math.abs(mult));
+        setLagrangeData((s: any)=>{return{...s,error: strs}});
+        return (err);
     }
 
     const calculateErrorNewton = (nearValues: PickerProps[], apps: number[]) => {
@@ -157,6 +193,8 @@ const Interpolacion: React.FC = () => {
             <Button onClick={lagrange}>Lagrange</Button>
             <Button onClick={newton}>Newton</Button>
         </div>
+        {showLagrange && <InterpolationLagrange data={lagrangeData as DataLagrange}/>}
+        {showNewton && <InterpolationNewton/>}
     </div>
   )
 }

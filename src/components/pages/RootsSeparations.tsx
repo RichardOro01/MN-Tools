@@ -6,7 +6,7 @@ const RootsSeparations: React.FC = () => {
     const [equation, setEquation] = useState('');
     const [values, setValues] = useState([0,0])
     const [iterations, setIterations] = useState(4);
-    const [error, setError] = useState(0.003);
+    const [error, setError] = useState(0);
 
     const bisection = () =>{
         console.log(equation, values);
@@ -25,6 +25,9 @@ const RootsSeparations: React.FC = () => {
                 console.log(`it ${i+1}:`, [a, b]);
                 const err = (b-a)/2;
                 console.log(`error :`, err);
+                if (err<=error) {
+                    break;
+                }
             }
         } else {
             console.log('No se cumple Bolsano!')
@@ -49,9 +52,12 @@ const RootsSeparations: React.FC = () => {
                     a = x;
                 }  
                 console.log(`it ${i+1}:`, [a, b]);
-                const error = Math.abs(x - old);
+                const err = Math.abs(x - old);
                 old = x;
-                console.log('error: ', error);
+                console.log('error: ', err);
+                if (err<=error) {
+                    break;
+                }
             }
         } else {
             console.log('No se cumple Bolsano!')
@@ -66,9 +72,12 @@ const RootsSeparations: React.FC = () => {
                 let x = a - (fun(equation, a) / df(equation, a));
                 a = x;
                 console.log(`it ${i+1}:`, a);
-                const error = Math.abs(x - old);
+                const err = Math.abs(x - old);
                 old = x;
-                console.log('error: ', error);
+                console.log('error: ', err);
+                if (err<=error) {
+                    break;
+                }
             }
         } else {
             console.log('No se cumplen la derivadas!')
@@ -85,9 +94,12 @@ const RootsSeparations: React.FC = () => {
             a = b;
             b = x;
             console.log(`it ${i+1}:`, [a, b]);
-            const error = Math.abs(x - old);
+            const err = Math.abs(x - old);
             old = x;
-            console.log('error: ', error);
+            console.log('error: ', err);
+            if (err<=error) {
+                break;
+            }
         }
     }
 
