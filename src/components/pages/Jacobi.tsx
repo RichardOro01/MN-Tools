@@ -42,7 +42,7 @@ const Jacobi: React.FC = () => {
         const n = 5;
         let multVector = [0, 0, 0];
         for (let it=0; it<n; it++) {
-            
+            let multiVectorCopy = [...multVector];
             for (let i=0; i<despMatrix.length; i++) {
                 let sum = 0;
                 for (let j=0; j<despMatrix[i].length; j++) {
@@ -50,8 +50,10 @@ const Jacobi: React.FC = () => {
                 }
                 multVector[i] = sum + despIndepTerms[i];
             }
+            const landa = Math.max(...substractMatrix(multiVectorCopy, multVector));
+            const error = Math.abs(((alpha/(1-alpha))*landa) || 0);
             console.log(`it ${it+1}: ${multVector}`);
-            // console.log(`error: ${error}`);
+            console.log(`error: ${error}`);
         }
     }
 
