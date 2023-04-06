@@ -9,19 +9,19 @@ const RootsSeparations: React.FC = () => {
 
     const bisection = () =>{
         console.log(equation, values);
-        let currentValues = [...values];
-        if (fun(currentValues[0]) * fun(currentValues[1]) < 0) {
+        let [a, b] = [...values];
+        if (fun(a) * fun(b) < 0) {
             for (let i=0; i<iterations; i++) {
-                let x = (currentValues[0] + currentValues[1]) / 2;
+                let x = (a + b) / 2;
                 let fx = fun(x);
                 if (fx===0) {
                     console.log(x);
-                } else if (fx * fun(currentValues[0]) < 0) {
-                    currentValues[1] = x;
+                } else if (fx * fun(a) < 0) {
+                    b = x;
                 } else {
-                    currentValues[0] = x;
+                    a = x;
                 }  
-                console.log(`it ${i+1}:`, currentValues)
+                console.log(`it ${i+1}:`, [a, b])
             }
         } else {
             console.log('No se cumple Bolsano!')
@@ -30,28 +30,47 @@ const RootsSeparations: React.FC = () => {
 
     const regulaFalsi = () =>{
         console.log(equation, values);
-        let currentValues = [...values];
-        if (fun(currentValues[0]) * fun(currentValues[1]) < 0) {
+        let [a, b] = [...values];
+        if (fun(a) * fun(b) < 0) {
             for (let i=0; i<iterations; i++) {
-                let fa = fun(currentValues[0])
-                let fb = fun(currentValues[1])
-                let x = (currentValues[0] - ((currentValues[1] - currentValues[0]) / (fb - fa)) * fa);
+                let fa = fun(a)
+                let fb = fun(b)
+                let x = a - ((b - a) / (fb - fa)) * fa;
                 let fx = fun(x);
                 if (fx===0) {
                     console.log(x);
-                } else if (fx * fun(currentValues[0]) < 0) {
-                    currentValues[1] = x;
+                } else if (fx * fa < 0) {
+                    b = x;
                 } else {
-                    currentValues[0] = x;
+                    a = x;
                 }  
-                console.log(`it ${i+1}:`, currentValues)
+                console.log(`it ${i+1}:`, [a, b])
             }
         } else {
             console.log('No se cumple Bolsano!')
         }
     }
     const newton = () =>{
-        console.log(equation);
+        console.log(equation, values);
+        let [a, b] = [...values];
+        if (fun(a) * fun(b) < 0) {
+            for (let i=0; i<iterations; i++) {
+                let fa = fun(a)
+                let fb = fun(b)
+                let x = a - ((b - a) / (fb - fa)) * fa;
+                let fx = fun(x);
+                if (fx===0) {
+                    console.log(x);
+                } else if (fx * fa < 0) {
+                    b = x;
+                } else {
+                    a = x;
+                }  
+                console.log(`it ${i+1}:`, [a, b])
+            }
+        } else {
+            console.log('No se cumple Bolsano!')
+        }
     }
     const secant = () =>{
         console.log(equation);
