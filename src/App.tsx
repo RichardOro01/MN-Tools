@@ -8,18 +8,20 @@ import Interpolacion from './components/pages/Interpolacion';
 import RootsSeparations from './components/pages/RootsSeparations';
 import NumericIntegration from './components/pages/NumericIntegration';
 import NumericOptimization from './components/pages/NumericOptimization';
+import { Result } from 'antd';
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Layout/>}>
+          <Route path='/MN-Tools' element={<Layout/>}>
             <Route index element={<Home/>}/>
-            <Route path='jacobi' element={<Jacobi/>}/>
-            <Route path='interpolation' element={<Interpolacion/>}/>
-            <Route path='roots_separation' element={<RootsSeparations/>}/>
-            <Route path='numeric_integration' element={<NumericIntegration/>}/>
-            <Route path='numeric_optimization' element={<NumericOptimization/>}/>
+            <Route path='/MN-Tools/jacobi' element={<Jacobi/>}/>
+            <Route path='/MN-Tools/interpolation' element={<Interpolacion/>}/>
+            <Route path='/MN-Tools/roots_separation' element={<RootsSeparations/>}/>
+            <Route path='/MN-Tools/numeric_integration' element={<NumericIntegration/>}/>
+            <Route path='/MN-Tools/numeric_optimization' element={<NumericOptimization/>}/>
+            <Route path='*' element={<Result status={'404'} title='404 Not Found'/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
