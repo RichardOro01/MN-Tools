@@ -52,7 +52,7 @@ const NumericOptimization: React.FC = () => {
         console.log(equa, interv_start, interv_end, point, tole);
     }
   return (
-    <div className='flex flex-col items-center'>
+    <div className='flex flex-col items-center p-4'>
         <Form ref={form}>
             <Form.Item
                 name='equa'
