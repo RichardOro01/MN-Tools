@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/MN-Tools/static/css/main.1957ae62.css",
+    "main.js": "/MN-Tools/static/js/main.ea17e973.js",
+    "index.html": "/MN-Tools/index.html",
+    "main.1957ae62.css.map": "/MN-Tools/static/css/main.1957ae62.css.map",
+    "main.ea17e973.js.map": "/MN-Tools/static/js/main.ea17e973.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1957ae62.css",
+    "static/js/main.ea17e973.js"
+  ]
+}
