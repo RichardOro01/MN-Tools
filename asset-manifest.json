@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/MN-Tools/static/css/main.1957ae62.css",
-    "main.js": "/MN-Tools/static/js/main.1ed6dda7.js",
+    "main.css": "/MN-Tools/static/css/main.b9c0d713.css",
+    "main.js": "/MN-Tools/static/js/main.93f7ac2e.js",
     "index.html": "/MN-Tools/index.html",
-    "main.1957ae62.css.map": "/MN-Tools/static/css/main.1957ae62.css.map",
-    "main.1ed6dda7.js.map": "/MN-Tools/static/js/main.1ed6dda7.js.map"
+    "main.b9c0d713.css.map": "/MN-Tools/static/css/main.b9c0d713.css.map",
+    "main.93f7ac2e.js.map": "/MN-Tools/static/js/main.93f7ac2e.js.map"
   },
   "entrypoints": [
-    "static/css/main.1957ae62.css",
-    "static/js/main.1ed6dda7.js"
+    "static/css/main.b9c0d713.css",
+    "static/js/main.93f7ac2e.js"
   ]
 }
