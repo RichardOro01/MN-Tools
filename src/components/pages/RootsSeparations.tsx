@@ -42,7 +42,10 @@ const RootsSeparations: React.FC = () => {
             for (let i=0; i<iterations; i++) {
                 let fa = fun(equation, a)
                 let fb = fun(equation, b)
+                console.log(`f(${a}): ${fun(equation, a)}`)
+                console.log(`f(${b}): ${fun(equation, b)}`)
                 let x = a - ((b - a) / (fb - fa)) * fa;
+                console.log(`${a} - ((${b} - ${a}) / (${fb} - ${fa})) * ${fa} = ${x}`)
                 let fx = fun(equation, x);
                 if (fx===0) {
                     console.log(x);

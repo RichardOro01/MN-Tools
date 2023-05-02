@@ -8,11 +8,18 @@ export const fun = (equation: string, x: number) => {
     return Number(parse.evaluate(`f(${x})`));
 }
 
-export const df = (equation: string, x: number, grade=1) => {
+export const df = (equation: string, x: number | "c", grade=1) => {
     const parsed = parse(equation);
     let df = parsed;
-    for (let i=0; i<grade; i++){
-        df = derivative(df, 'x');
+    if (x==='c') {
+        for (let i=0; i<grade; i++){
+            df = derivative(df, 'x');
+        }
+        return df.toString();
+    } else {
+        for (let i=0; i<grade; i++){
+            df = derivative(df, 'x');
+        }
+        return df.evaluate({x: x});
     }
-    return df.evaluate({x: x});
 }

@@ -13,6 +13,8 @@ const Header:React.FC = () => {
             <Button onClick={()=>navigate('interpolation')}>Interpolación</Button>
             <Button onClick={()=>navigate('jacobi')}>Jacobi</Button>
             <Button onClick={()=>navigate('roots_separation')}>Separación de raíces</Button>
+            <Button onClick={()=>navigate('numeric_integration')}>Integracion numérica</Button>
+            <Button onClick={()=>navigate('numeric_optimization')}>Optimización numérica</Button>
         </div>
     </div>
   )
