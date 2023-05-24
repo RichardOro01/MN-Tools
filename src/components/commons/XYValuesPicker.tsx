@@ -44,7 +44,7 @@ const XYValuesPicker: React.FC<{ setValues: (a: any)=>void }> = ({setValues}) =>
     }
     
   return (
-    <div className='flex flex-row bg-slate-200 rounded py-3 px-6 w-1/2 self-center'>
+    <div className='flex flex-row bg-slate-200 rounded py-3 px-6 w-1/2 self-center overflow-x-auto border-solid border-2 border-gray-200'>
         <div className='flex flex-col mr-3'>
             <div>
                 x

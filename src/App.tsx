@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import {BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes, HashRouter } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Home from './components/pages/Home';
 import Jacobi from './components/pages/Jacobi';
@@ -12,19 +12,19 @@ import { Result } from 'antd';
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
+    <HashRouter basename='MN-Tools'>
         <Routes>
-          <Route path='/MN-Tools' element={<Layout/>}>
+          <Route path='/' element={<Layout/>}>
             <Route index element={<Home/>}/>
-            <Route path='/MN-Tools/jacobi' element={<Jacobi/>}/>
-            <Route path='/MN-Tools/interpolation' element={<Interpolacion/>}/>
-            <Route path='/MN-Tools/roots_separation' element={<RootsSeparations/>}/>
-            <Route path='/MN-Tools/numeric_integration' element={<NumericIntegration/>}/>
-            <Route path='/MN-Tools/numeric_optimization' element={<NumericOptimization/>}/>
+            <Route path='jacobi' element={<Jacobi/>}/>
+            <Route path='interpolation' element={<Interpolacion/>}/>
+            <Route path='roots_separation' element={<RootsSeparations/>}/>
+            <Route path='numeric_integration' element={<NumericIntegration/>}/>
+            <Route path='numeric_optimization' element={<NumericOptimization/>}/>
             <Route path='*' element={<Result status={'404'} title='404 Not Found'/>}/>
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
   );
 }
 
